@@ -16,7 +16,8 @@ struct timespec:
                 timespec() = default;
     inline      timespec(decltype(tv_sec) sec, decltype(tv_nsec) nsec);
 
-    //TODO: operator -=, +=, +
+    //TODO: operator -=, +=
+    timespec    operator + (const timespec& rvalue) const;
     timespec    operator - (const timespec& rvalue) const;
     bool        operator < (const timespec& rvalue) const;
     bool        operator > (const timespec& rvalue) const;

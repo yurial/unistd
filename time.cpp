@@ -6,6 +6,15 @@
 namespace unistd
 {
 
+timespec timespec::operator + (const timespec& rvalue) const
+{
+timespec result = *this;
+result.tv_sec += rvalue.tv_sec;
+result.tv_sec += (result.tv_nsec + rvalue.tv_nsec) / 1000000000L;
+result.tv_nsec = (result.tv_nsec + rvalue.tv_nsec) % 1000000000L;
+return result;
+}
+
 timespec timespec::operator - (const timespec& rvalue) const
 {
 timespec result = *this;;
