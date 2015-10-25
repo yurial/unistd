@@ -68,10 +68,9 @@ inline void epoll_mod(int efd, int fd, int events, const T& arg)
     ::unistd::epoll_ctl( efd, EPOLL_CTL_MOD, fd, events, arg );
     }
 
-template <class T>
-inline void epoll_del(int efd, int fd, int events, const T& arg)
+inline void epoll_del(int efd, int fd)
     {
-    ::unistd::epoll_ctl( efd, EPOLL_CTL_DEL, fd, events, arg );
+    ::unistd::epoll_ctl( efd, EPOLL_CTL_DEL, fd, 0, nullptr );
     }
 
 inline void epoll_wait(int efd, std::vector<epoll_event>& events, int timeout)

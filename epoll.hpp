@@ -23,8 +23,7 @@ template <class T>
 void    epoll_add(int efd, int fd, int events, const T& arg);
 template <class T>
 void    epoll_mod(int efd, int fd, int events, const T& arg);
-template <class T>
-void    epoll_del(int efd, int fd, int events, const T& arg);
+void    epoll_del(int efd, int fd );
 
 void    epoll_wait(int efd, std::vector<epoll_event>& events, int timeout);
 std::vector<epoll_event> epoll_wait(int efd, int maxevents, int timeout);
