@@ -7,28 +7,32 @@
 namespace unistd
 {
 
+//this class implements RAII for unix file descriptors
 class fd
 {
 protected:
-int         m_fd;
+int             m_fd;
 
 public:
-inline          fd();
+enum { bad_fileno = -1 };
+
+inline          fd() noexcept;
+inline          fd(fd&& origin) noexcept;
 inline          fd(const fd& origin);
-inline          fd(fd&& origin);
-inline          fd(const int& origin);
-inline          fd(int&& origin);
-inline          ~fd(); //to avoid throw, call .close(std::nothrow) manualy before destructing
+inline          ~fd() noexcept; //std::terminate() at throw
 
-inline  fd      operator = (const fd& rvalue);
-inline  fd      operator = (const int& rvalue);
-inline  fd      operator = (int&& rvalue);
+inline  bool    operator == (const fd& rvalue) const = delete;
 
-inline          operator int () const;
+inline  fd&     operator = (fd&& rvalue);
+inline  fd&     operator = (const fd& rvalue);
+inline          operator int () const noexcept;
 
 inline  void    close();
-inline  int     close(const std::nothrow_t&);
-inline  void    swap(fd& val);
+inline  int     close(const std::nothrow_t&) noexcept; //return errcode instead of throwing exception
+inline  void    swap(fd& val) noexcept;
+
+inline static   fd dup(int val);            //construct unistd::fd using ::dup(val)
+inline static   fd nodup(int val) noexcept; //construct unistd::fd without call ::dup(val)
 };
 
 } //namespace unistd
