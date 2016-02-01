@@ -2,6 +2,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <string.h>
 
 #include <system_error>
 
@@ -118,6 +119,16 @@ void unlinkat(int dirfd, const std::string& fname, int flags)
     int ret = ::unlinkat( dirfd, fname.c_str(), flags );
     if ( 0 != ret )
         throw std::system_error( errno, std::system_category(), ext::mkstr( "unlinkat( '%s' )", ext::escape_posix( fname ).c_str() ) );
+    }
+
+stat fstat(int fd)
+    {
+    stat result;
+    memset( &result, 0, sizeof( result ) );
+    int ret = fstat( fd, &result );
+    if ( 0 != ret )
+        throw std::system_error( errno, std::system_category(), ext::mkstr( "fstat( %d )", fd ) );
+    return result;
     }
 
 } //namespace unistd

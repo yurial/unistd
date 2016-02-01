@@ -1,6 +1,10 @@
 #ifndef UNISTD_UNISTD_HPP
 #define UNISTD_UNISTD_HPP
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #include <vector>
 #include <string>
 
@@ -9,6 +13,7 @@
 
 namespace unistd
 {
+typedef struct ::stat stat;
 
 int     open(const std::string& fname, int flags) __attribute__((warn_unused_result));
 int     openat(int dirfd, const std::string& fname, int flags, mode_t mode) __attribute__((warn_unused_result));
@@ -26,6 +31,8 @@ void    read_all(int fd, void* buf, size_t count);
 void    write_all(int fd, const void* buf, size_t count);
 void    read_all(int fd, std::vector<char>& buf);
 void    write_all(int fd, const std::vector<char>& buf);
+
+stat    fstat(int fd);
 
 } //namespace unistd
 
