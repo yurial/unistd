@@ -9,20 +9,20 @@ namespace unistd
 {
 
 struct addrinfo
-{
-int                 ai_flags;
-int                 ai_family;
-int                 ai_socktype;
-int                 ai_protocol;
-socklen_t           ai_addrlen;
-sockaddr_storage    ai_addr;
-std::string         ai_canonname;
+    {
+    int                 ai_flags;
+    int                 ai_family;
+    int                 ai_socktype;
+    int                 ai_protocol;
+    socklen_t           ai_addrlen;
+    sockaddr_storage    ai_addr;
+    std::string         ai_canonname;
 
-        addrinfo();
-template <class addrinfo_t>
-inline  addrinfo(const addrinfo_t& ai);
-        operator ::addrinfo() const;
-}; //addrinfo
+            addrinfo();
+    template <class addrinfo_t>
+    inline  addrinfo(const addrinfo_t& ai);
+            operator ::addrinfo() const;
+    }; //addrinfo
 
 template <class addrinfo_t>
 addrinfo::addrinfo(const addrinfo_t& ai):
