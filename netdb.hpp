@@ -7,6 +7,7 @@
 namespace unistd
 {
 
+std::vector<unistd::addrinfo> getaddrinfo(const std::string& host_and_port);
 std::vector<unistd::addrinfo> getaddrinfo(const std::string& host, const std::string& port, const unistd::addrinfo& hint);
 std::vector<unistd::addrinfo> getaddrinfo(const std::string& host, const std::string& port, bool passive = false);
 

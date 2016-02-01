@@ -7,6 +7,53 @@
 namespace unistd
 {
 
+// valid input strings:
+//   "1.1.1.1:111"
+//   "[2a02:6b8::3]:65535"
+//   "ya.ru:80"
+std::vector<unistd::addrinfo> getaddrinfo(const std::string& host_and_port)
+    {
+    size_t first_colon_idx = host_and_port.find(':');
+    size_t last_colon_idx  = host_and_port.rfind(':');
+    size_t host_start_idx  = 0;
+    size_t host_end_idx    = last_colon_idx;
+
+    if( first_colon_idx == std::string::npos )
+        {
+        std::string msg = "no colon in " + host_and_port;
+        throw std::runtime_error(msg);
+        }
+
+    if( first_colon_idx == 0 || last_colon_idx == host_and_port.size()-1 )
+        {
+        std::string msg = "colon in wrong place in " + host_and_port;
+        throw std::runtime_error(msg);
+        }
+
+    if( first_colon_idx != last_colon_idx )
+        {
+        // "[2a02:6b8::3]:80"
+        if( host_and_port[0] != '[' || host_and_port[last_colon_idx-1] != ']' )
+            {
+            std::string msg = "invalid hostport format: " + host_and_port;
+            throw std::runtime_error(msg);
+            }
+        host_start_idx++;
+        host_end_idx--;
+        }
+
+    long port = atol(host_and_port.substr(last_colon_idx+1).c_str());
+    if( port < 0 || port > 65535 )
+        {
+        std::string msg = "invalid port in " + host_and_port;
+        throw std::runtime_error(msg);
+        }
+
+    return getaddrinfo(
+        host_and_port.substr(host_start_idx, host_end_idx-host_start_idx),
+        host_and_port.substr(last_colon_idx+1) );
+    }
+
 std::vector<unistd::addrinfo> getaddrinfo(const std::string& host, const std::string& port, bool passive)
     {
     unistd::addrinfo hint;
@@ -20,13 +67,13 @@ std::vector<unistd::addrinfo> getaddrinfo(const std::string& host, const std::st
     {
     struct ::addrinfo native_hint = hint;
     struct ::addrinfo* res = nullptr;
-    int ret = getaddrinfo( host.c_str(), port.c_str(), &native_hint, &res ); 
+    int ret = getaddrinfo( host.c_str(), port.c_str(), &native_hint, &res );
     if ( 0 != ret )
         throw std::runtime_error( ext::mkstr( "getaddrinfo('%s'): %s", host.c_str(), gai_strerror( ret ) ) );
 
     std::vector<unistd::addrinfo> result;
-    for (; res; res = res->ai_next)
-        result.push_back( *res );
+    for (::addrinfo* cur = res; cur; cur = cur->ai_next)
+        result.push_back( *cur );
 
     freeaddrinfo( res );
     return result;
