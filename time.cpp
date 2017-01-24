@@ -44,6 +44,44 @@ bool timespec::operator > (const timespec& rvalue) const
     return rvalue < *this;
     }
 
+timeval timeval::operator + (const timeval& rvalue) const
+    {
+    timeval result = *this;
+    result.tv_sec += rvalue.tv_sec;
+    result.tv_sec += (result.tv_usec + rvalue.tv_usec) / 1000000L;
+    result.tv_usec = (result.tv_usec + rvalue.tv_usec) % 1000000L;
+    return result;
+    }
+
+timeval timeval::operator - (const timeval& rvalue) const
+    {
+    timeval result = *this;;
+    result.tv_sec -= rvalue.tv_sec;
+    result.tv_usec -= rvalue.tv_usec;
+    if ( result.tv_usec < 0 )
+        {
+        --result.tv_sec;
+        result.tv_usec += 1000 * 1000;
+        }
+    return result;
+    }
+
+bool timeval::operator < (const timeval& rvalue) const
+    {
+    if ( tv_sec < rvalue.tv_sec )
+        return true;
+    else if ( rvalue.tv_sec < tv_sec )
+        return false;
+    else if ( tv_usec < rvalue.tv_usec )
+        return true;
+    return false;
+    }
+
+bool timeval::operator > (const timeval& rvalue) const
+    {
+    return rvalue < *this;
+    }
+
 timespec clock_gettime(clockid_t clk_id)
     {
     timespec result;
