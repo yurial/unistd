@@ -38,6 +38,7 @@ void    write_all(int fd, const std::vector<char>& buf);
 
 stat    fstat(int fd);
 
+void    mkdir(const std::string& pathname, mode_t mode = 0775);
 } //namespace unistd
 
 #endif

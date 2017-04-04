@@ -158,5 +158,14 @@ stat fstat(int fd)
     return result;
     }
 
+void mkdir(const std::string& pathname, mode_t mode)
+    {
+    int ret = ::mkdir( pathname.c_str(), mode );
+    if ( 0 != ret )
+        {
+        throw std::system_error( errno, std::system_category(), ext::mkstr( "mkdir( %s )", pathname.c_str() ) );
+        }
+    }
+
 } //namespace unistd
 
