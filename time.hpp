@@ -19,10 +19,12 @@ struct timespec:
     inline      timespec(decltype(tv_sec) sec, decltype(tv_nsec) nsec);
 
     //TODO: operator -=, +=
-    timespec    operator + (const timespec& rvalue) const;
-    timespec    operator - (const timespec& rvalue) const;
-    bool        operator < (const timespec& rvalue) const;
-    bool        operator > (const timespec& rvalue) const;
+    timespec    operator +  (const timespec& rvalue) const;
+    timespec    operator -  (const timespec& rvalue) const;
+    bool        operator <  (const timespec& rvalue) const;
+    bool        operator >  (const timespec& rvalue) const;
+    bool        operator <= (const timespec& rvalue) const;
+    bool        operator >= (const timespec& rvalue) const;
     }; //struct timespec
 
 struct timeval:
@@ -36,10 +38,12 @@ struct timeval:
     inline      timeval(decltype(tv_sec) sec, decltype(tv_usec) usec);
 
     //TODO: operator -=, +=
-    timeval    operator + (const timeval& rvalue) const;
-    timeval    operator - (const timeval& rvalue) const;
-    bool        operator < (const timeval& rvalue) const;
-    bool        operator > (const timeval& rvalue) const;
+    timeval     operator +  (const timeval& rvalue) const;
+    timeval     operator -  (const timeval& rvalue) const;
+    bool        operator <  (const timeval& rvalue) const;
+    bool        operator >  (const timeval& rvalue) const;
+    bool        operator <= (const timeval& rvalue) const;
+    bool        operator >= (const timeval& rvalue) const;
     }; // struct timeval
 
 timespec    clock_gettime(clockid_t clk_id);

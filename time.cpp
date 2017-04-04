@@ -2,6 +2,7 @@
 #include <system_error>
 
 #include "time.hpp"
+#include <tuple>
 
 namespace unistd
 {
@@ -30,18 +31,22 @@ timespec timespec::operator - (const timespec& rvalue) const
 
 bool timespec::operator < (const timespec& rvalue) const
     {
-    if ( tv_sec < rvalue.tv_sec )
-        return true;
-    else if ( rvalue.tv_sec < tv_sec )
-        return false;
-    else if ( tv_nsec < rvalue.tv_nsec )
-        return true;
-    return false;
+    return std::tie(tv_sec, tv_nsec) < std::tie(rvalue.tv_sec, rvalue.tv_nsec);
     }
 
 bool timespec::operator > (const timespec& rvalue) const
     {
     return rvalue < *this;
+    }
+
+bool timespec::operator <= (const timespec& rvalue) const
+    {
+    return std::tie(tv_sec, tv_nsec) <= std::tie(rvalue.tv_sec, rvalue.tv_nsec);
+    }
+
+bool timespec::operator >= (const timespec& rvalue) const
+    {
+    return rvalue <= *this;
     }
 
 timeval timeval::operator + (const timeval& rvalue) const
@@ -68,18 +73,22 @@ timeval timeval::operator - (const timeval& rvalue) const
 
 bool timeval::operator < (const timeval& rvalue) const
     {
-    if ( tv_sec < rvalue.tv_sec )
-        return true;
-    else if ( rvalue.tv_sec < tv_sec )
-        return false;
-    else if ( tv_usec < rvalue.tv_usec )
-        return true;
-    return false;
+    return std::tie(tv_sec, tv_usec) < std::tie(rvalue.tv_sec, rvalue.tv_usec);
     }
 
 bool timeval::operator > (const timeval& rvalue) const
     {
     return rvalue < *this;
+    }
+
+bool timeval::operator <= (const timeval& rvalue) const
+    {
+    return std::tie(tv_sec, tv_usec) <= std::tie(rvalue.tv_sec, rvalue.tv_usec);
+    }
+
+bool timeval::operator >= (const timeval& rvalue) const
+    {
+    return rvalue <= *this;
     }
 
 timespec clock_gettime(clockid_t clk_id)
