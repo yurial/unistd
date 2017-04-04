@@ -1,5 +1,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/file.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
@@ -119,6 +120,13 @@ void unlinkat(int dirfd, const std::string& fname, int flags)
     int ret = ::unlinkat( dirfd, fname.c_str(), flags );
     if ( 0 != ret )
         throw std::system_error( errno, std::system_category(), ext::mkstr( "unlinkat( '%s' )", ext::escape_posix( fname ).c_str() ) );
+    }
+
+void renameat(int olddirfd, const std::string& oldpath, int newdirfd, const std::string& newpath)
+    {
+    int ret = ::renameat( olddirfd, oldpath.c_str(), newdirfd, newpath.c_str() );
+    if ( 0 != ret )
+        throw std::system_error( errno, std::system_category(), ext::mkstr( "renameat( '%s', '%s' )", ext::escape_posix( oldpath ).c_str(), ext::escape_posix( newpath ).c_str() ) );
     }
 
 stat fstat(int fd)
