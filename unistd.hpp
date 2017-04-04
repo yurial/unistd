@@ -24,7 +24,8 @@ void    unlinkat(int dirfd, const std::string& fname, int flags = 0);
 void    renameat(int olddirfd, const std::string& oldpath, int newdirfd, const std::string& newpath);
 void    linkat(int olddirfd, const std::string& oldpath, int newdirfd, const std::string& newpath, int flags = 0);
 bool    flock(int fd, int operation);
-
+stat    fstat(int fd);
+void    mkdir(const std::string& pathname, mode_t mode = 0775);
 
 size_t  read(int fd, void* buf, size_t count) __attribute__((warn_unused_result));
 size_t  write(int fd, const void* buf, size_t count) __attribute__((warn_unused_result));
@@ -35,10 +36,6 @@ void    read_all(int fd, void* buf, size_t count);
 void    write_all(int fd, const void* buf, size_t count);
 void    read_all(int fd, std::vector<char>& buf);
 void    write_all(int fd, const std::vector<char>& buf);
-
-stat    fstat(int fd);
-
-void    mkdir(const std::string& pathname, mode_t mode = 0775);
 } //namespace unistd
 
 #endif
