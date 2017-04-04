@@ -136,6 +136,18 @@ void linkat(int olddirfd, const std::string& oldpath, int newdirfd, const std::s
         throw std::system_error( errno, std::system_category(), ext::mkstr( "linkat( '%s', '%s' )", ext::escape_posix( oldpath ).c_str(), ext::escape_posix( newpath ).c_str() ) );
     }
 
+bool flock(int fd, int operation)
+    {
+    int ret = ::flock( fd, operation );
+    if ( 0 != ret )
+        {
+        if ( EWOULDBLOCK == errno )
+            return false;
+        throw std::system_error( errno, std::system_category(), ext::mkstr( "flock( %d )", fd ) );
+        }
+    return true;
+    }
+
 stat fstat(int fd)
     {
     stat result;
