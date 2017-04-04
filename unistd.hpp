@@ -22,6 +22,7 @@ void    close(int fd);
 void    unlink(const std::string& fname);
 void    unlinkat(int dirfd, const std::string& fname, int flags = 0);
 void    renameat(int olddirfd, const std::string& oldpath, int newdirfd, const std::string& newpath);
+void    linkat(int olddirfd, const std::string& oldpath, int newdirfd, const std::string& newpath, int flags = 0);
 
 
 size_t  read(int fd, void* buf, size_t count) __attribute__((warn_unused_result));
