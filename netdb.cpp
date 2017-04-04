@@ -92,6 +92,15 @@ int socket(int domain, int type, int protocol)
     return fd;
     }
 
+std::tuple<int,int> socketpair(int domain, int type, int protocol)
+    {
+    int sv[2] = { -1, -1 };
+    int ret = ::socketpair( domain, type, protocol, sv );
+    if ( 0 != ret )
+        throw std::system_error( errno, std::system_category(), "socketpair" );
+    return std::make_tuple( sv[0], sv[1] );
+    }
+
 void listen(int sock, int backlog)
     {
     int ret = ::listen( sock, backlog );

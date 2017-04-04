@@ -1,6 +1,7 @@
 #ifndef UNISTD_NETDB_HPP
 #define UNISTD_NETDB_HPP
 
+#include <tuple>
 #include <vector>
 #include "addrinfo.hpp"
 
@@ -13,6 +14,7 @@ std::vector<unistd::addrinfo> getaddrinfo(const std::string& host, const std::st
 
 int socket(const unistd::addrinfo& addr);
 int socket(int domain, int type, int protocol);
+std::tuple<int,int> socketpair(int domain, int type, int protocol);
 
 void listen(int sock, int backlog);
 void bind(int sock, const unistd::addrinfo& addr);
