@@ -3,7 +3,7 @@ namespace unistd
 
 inline int epoll_create(int flags)
     {
-    int fd = ::epoll_create1( flags );
+    const int fd = ::epoll_create1( flags );
     if ( -1 == fd )
         throw std::system_error( errno, std::system_category(), "epoll_create1" );
     return fd;
@@ -11,14 +11,14 @@ inline int epoll_create(int flags)
 
 inline void epoll_ctl(int efd, int op, int fd, const struct epoll_event* event)
     {
-    int ret = ::epoll_ctl( efd, op, fd, const_cast<struct epoll_event*>( event ) );
+    const int ret = ::epoll_ctl( efd, op, fd, const_cast<struct epoll_event*>( event ) );
     if ( 0 != ret )
         throw std::system_error( errno, std::system_category(), "epoll_ctl" );
     }
 
 inline size_t epoll_wait(int efd, struct epoll_event* events, int maxevents, int timeout)
     {
-    int nready = ::epoll_wait( efd, events, maxevents, timeout );
+    const int nready = ::epoll_wait( efd, events, maxevents, timeout );
     if ( nready < 0 )
         throw std::system_error( errno, std::system_category(), "epoll_wait" );
     return nready;

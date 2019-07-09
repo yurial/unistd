@@ -1,5 +1,4 @@
-#ifndef UNISTD_EPOLL_HPP
-#define UNISTD_EPOLL_HPP
+#pragma once
 
 #include <sys/epoll.h>
 #include <errno.h>

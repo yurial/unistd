@@ -1,15 +1,16 @@
-#ifndef UNISTD_UNISTD_HPP
-#define UNISTD_UNISTD_HPP
+#pragma once
 
+#include <sys/file.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/mman.h>
 #include <unistd.h>
 
 #include <vector>
 #include <string>
 
-//all unistd::* functions is a stndard glibc functions that throw std::system_error/std::runtime_error on error
-//some of standard functions has advanced easy-to-use overloadings (ex: write(std::vector) )
+// all unistd::* functions is a stndard glibc functions that throw std::system_error/std::runtime_error on error
+// some of standard functions has advanced easy-to-use overloadings (ex: write(std::vector) )
 
 namespace unistd
 {
@@ -25,7 +26,7 @@ void    renameat(int olddirfd, const std::string& oldpath, int newdirfd, const s
 void    linkat(int olddirfd, const std::string& oldpath, int newdirfd, const std::string& newpath, int flags = 0);
 bool    flock(int fd, int operation);
 stat    fstat(int fd);
-void    mkdir(const std::string& pathname, mode_t mode = 0775);
+void*   mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset);
 
 size_t  read(int fd, void* buf, size_t count) __attribute__((warn_unused_result));
 size_t  write(int fd, const void* buf, size_t count) __attribute__((warn_unused_result));
@@ -36,7 +37,7 @@ void    read_all(int fd, void* buf, size_t count);
 void    write_all(int fd, const void* buf, size_t count);
 void    read_all(int fd, std::vector<char>& buf);
 void    write_all(int fd, const std::vector<char>& buf);
-} //namespace unistd
 
-#endif
+void    mkdir(const std::string& pathname, mode_t mode = 0775);
+} // namespace unistd
 

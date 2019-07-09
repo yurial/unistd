@@ -1,5 +1,4 @@
-#ifndef UNISTD_FD_HPP
-#define UNISTD_FD_HPP
+#pragma once
 
 #include <new>
 #include <utility>
@@ -7,43 +6,45 @@
 namespace unistd
 {
 
-//this class implements RAII for unix file descriptors
+// this class implements RAII for unix file descriptors
 class fd
+{
+public:
+typedef int native_type;
+enum: native_type
     {
-    protected:
-    int             m_fd;
-
-    public:
-    enum { bad_fileno = -1 };
-
-    inline          fd() noexcept;
-    inline          fd(fd&& origin) noexcept;
-    inline          fd(const fd& origin);
-    inline          ~fd() noexcept; //std::terminate() at throw
-
-    inline  bool    operator == (const fd& rvalue) const = delete;
-
-    inline  fd&     operator = (fd&& rvalue);
-    inline  fd&     operator = (const fd& rvalue);
-    inline          operator int () const noexcept;
-
-    inline  void    close();
-    inline  int     close(const std::nothrow_t&) noexcept; //return errcode instead of throwing exception
-    inline  void    swap(fd& val) noexcept;
-
-    inline static   fd dup(int val);            //construct unistd::fd using ::dup(val)
-    inline static   fd nodup(int val) noexcept; //construct unistd::fd without call ::dup(val)
+    bad_fileno = -1
     };
 
-} //namespace unistd
+inline      fd() noexcept;
+inline      fd(fd&& origin) noexcept;
+inline      fd(const fd& origin);
+inline      ~fd() noexcept; // std::terminate() at throw
+
+inline bool operator==(const fd& rvalue) const = delete;
+
+inline fd&  operator=(fd&& rvalue);
+inline fd&  operator=(const fd& rvalue);
+inline      operator native_type() const noexcept;
+
+inline void close();
+inline int  close(const std::nothrow_t&) noexcept; // return errcode instead of throwing exception
+inline void swap(fd& val) noexcept;
+
+inline static fd dup(native_type val);            // construct unistd::fd using ::dup(val)
+inline static fd nodup(native_type val) noexcept; // construct unistd::fd without call ::dup(val)
+
+protected:
+native_type m_fd;
+};
+
+} // namespace unistd
 
 namespace std
 {
-template<>
+template <>
 inline void swap(unistd::fd& lvalue, unistd::fd& rvalue);
 }
 
 #include "fd.inc"
-
-#endif
 

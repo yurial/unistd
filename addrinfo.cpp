@@ -1,21 +1,10 @@
-#include <string.h>
-#include <system_error>
-#include <ext/mkstr.hpp>
 #include "addrinfo.hpp"
+#include "internal.hpp"
+#include <system_error>
 
 namespace unistd
 {
-
-addrinfo::addrinfo():
-        ai_flags(),
-        ai_family(),
-        ai_socktype(),
-        ai_protocol(),
-        ai_addrlen(),
-        ai_addr(),
-        ai_canonname()
-    {
-    }
+nameinfo getnameinfo(const addrinfo& addr); // fwd
 
 addrinfo::operator ::addrinfo() const
     {
@@ -31,7 +20,7 @@ addrinfo::operator ::addrinfo() const
     return result;
     }
 
-} //namespace unistd
+} // namespace unistd
 
 namespace ext
 {
@@ -39,18 +28,12 @@ namespace ext
 template <>
 std::string convert_to(const unistd::addrinfo& addr)
     {
-    char host_buf[NI_MAXHOST];
-    char serv_buf[NI_MAXSERV];
+    const unistd::nameinfo& info = unistd::getnameinfo(addr);
 
-    int ret = ::getnameinfo( reinterpret_cast<const sockaddr*>( &addr.ai_addr ), addr.ai_addrlen, host_buf, sizeof(host_buf), serv_buf, sizeof(serv_buf), NI_NUMERICHOST | NI_NUMERICSERV );
-    if ( 0 != ret )
-        return "invalid address";
-
-    if ( addr.ai_family == AF_INET6 )
-        return ext::mkstr( "[%s]:%s", host_buf, serv_buf );
-
-    return ext::mkstr( "%s:%s", host_buf, serv_buf );
+    if (addr.ai_family == AF_INET6)
+        return unistd::internal::mkstr("[%s]:%s", info.host.c_str(), info.serv.c_str());
+    else
+        return unistd::internal::mkstr("%s:%s", info.host.c_str(), info.serv.c_str());
     }
 
-} //namespace ext
-
+} // namespace ext

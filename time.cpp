@@ -1,13 +1,12 @@
+#include "time.hpp"
 #include <errno.h>
 #include <system_error>
-
-#include "time.hpp"
 #include <tuple>
 
 namespace unistd
 {
 
-timespec timespec::operator + (const timespec& rvalue) const
+timespec timespec::operator + (const timespec& rvalue) const noexcept
     {
     timespec result = *this;
     result.tv_sec += rvalue.tv_sec;
@@ -16,12 +15,13 @@ timespec timespec::operator + (const timespec& rvalue) const
     return result;
     }
 
-timespec timespec::operator - (const timespec& rvalue) const
+timespec timespec::operator - (const timespec& rvalue) const noexcept
     {
-    timespec result = *this;;
+    timespec result = *this;
+
     result.tv_sec -= rvalue.tv_sec;
     result.tv_nsec -= rvalue.tv_nsec;
-    if ( result.tv_nsec < 0 )
+    if (result.tv_nsec < 0)
         {
         --result.tv_sec;
         result.tv_nsec += 1000 * 1000 * 1000;
@@ -29,27 +29,44 @@ timespec timespec::operator - (const timespec& rvalue) const
     return result;
     }
 
-bool timespec::operator < (const timespec& rvalue) const
+timespec& timespec::operator += (const timespec& rvalue) noexcept
+    {
+    tv_sec += rvalue.tv_sec;
+    tv_nsec += rvalue.tv_nsec;
+    if (tv_nsec >= 1000 * 1000 * 1000)
+        {
+        tv_sec++;
+        tv_nsec -= 1000 * 1000 * 1000;
+        }
+    return *this;
+    }
+
+bool timespec::operator < (const timespec& rvalue) const noexcept
     {
     return std::tie(tv_sec, tv_nsec) < std::tie(rvalue.tv_sec, rvalue.tv_nsec);
     }
 
-bool timespec::operator > (const timespec& rvalue) const
-    {
-    return rvalue < *this;
-    }
-
-bool timespec::operator <= (const timespec& rvalue) const
+bool timespec::operator <= (const timespec& rvalue) const noexcept
     {
     return std::tie(tv_sec, tv_nsec) <= std::tie(rvalue.tv_sec, rvalue.tv_nsec);
     }
 
-bool timespec::operator >= (const timespec& rvalue) const
+bool timespec::operator >= (const timespec& rvalue) const noexcept
     {
-    return rvalue <= *this;
+    return std::tie(tv_sec, tv_nsec) >= std::tie(rvalue.tv_sec, rvalue.tv_nsec);
     }
 
-timeval timeval::operator + (const timeval& rvalue) const
+bool timespec::operator > (const timespec& rvalue) const noexcept
+    {
+    return rvalue < *this;
+    }
+
+bool timespec::operator == (const timespec& rvalue) const noexcept
+    {
+    return tv_sec == rvalue.tv_sec && tv_nsec == rvalue.tv_nsec;
+    }
+
+timeval timeval::operator + (const timeval& rvalue) const noexcept
     {
     timeval result = *this;
     result.tv_sec += rvalue.tv_sec;
@@ -58,7 +75,7 @@ timeval timeval::operator + (const timeval& rvalue) const
     return result;
     }
 
-timeval timeval::operator - (const timeval& rvalue) const
+timeval timeval::operator - (const timeval& rvalue) const noexcept
     {
     timeval result = *this;;
     result.tv_sec -= rvalue.tv_sec;
@@ -71,48 +88,48 @@ timeval timeval::operator - (const timeval& rvalue) const
     return result;
     }
 
-bool timeval::operator < (const timeval& rvalue) const
+bool timeval::operator < (const timeval& rvalue) const noexcept
     {
     return std::tie(tv_sec, tv_usec) < std::tie(rvalue.tv_sec, rvalue.tv_usec);
     }
 
-bool timeval::operator > (const timeval& rvalue) const
+bool timeval::operator > (const timeval& rvalue) const noexcept
     {
     return rvalue < *this;
     }
 
-bool timeval::operator <= (const timeval& rvalue) const
+bool timeval::operator <= (const timeval& rvalue) const noexcept
     {
     return std::tie(tv_sec, tv_usec) <= std::tie(rvalue.tv_sec, rvalue.tv_usec);
     }
 
-bool timeval::operator >= (const timeval& rvalue) const
+bool timeval::operator >= (const timeval& rvalue) const noexcept
     {
     return rvalue <= *this;
     }
 
-timespec clock_gettime(clockid_t clk_id)
+timespec clock_gettime(const clockid_t clk_id)
     {
     timespec result;
-    int ret = clock_gettime( clk_id, &result );
-    if ( 0 != ret )
-        throw std::system_error( errno, std::system_category(), "clock_gettime" );
+    const int ret = clock_gettime(clk_id, &result);
+    if (0 != ret)
+        throw std::system_error(errno, std::system_category(), "clock_gettime");
     return result;
     }
 
 void nanosleep(const timespec& req)
     {
-    int ret = ::nanosleep( &req, nullptr );
-    if ( 0 != ret )
-        throw std::system_error( errno, std::system_category(), "nanosleep" );
+    const int ret = ::nanosleep(&req, nullptr);
+    if (0 != ret)
+        throw std::system_error(errno, std::system_category(), "nanosleep");
     }
 
 void nanosleep(const timespec& req, timespec& rem)
     {
-    int ret = ::nanosleep( &req, &rem );
-    if ( 0 != ret )
-        throw std::system_error( errno, std::system_category(), "nanosleep" );
+    const int ret = ::nanosleep(&req, &rem);
+    if (0 != ret)
+        throw std::system_error(errno, std::system_category(), "nanosleep");
     }
 
-} //namespace unistd
+} // namespace unistd
 

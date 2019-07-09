@@ -1,59 +1,56 @@
-#ifndef UNISTD_TIME_HPP
-#define UNISTD_TIME_HPP
+#pragma once
 
-#include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
-
 
 namespace unistd
 {
 struct timespec:
-        public ::timespec
-    {
-    using ::timespec::tv_sec;
-    using ::timespec::tv_nsec;
+    public ::timespec
+{
+using ::timespec::tv_nsec;
+using ::timespec::tv_sec;
 
-                timespec() = default;
-    inline      timespec(const ::timespec& origin);
-    inline      timespec(decltype(tv_sec) sec, decltype(tv_nsec) nsec);
+inline timespec() noexcept;
+inline timespec(const ::timespec& origin) noexcept;
+inline timespec(decltype(::timespec::tv_sec) sec, decltype(::timespec::tv_nsec) nsec) noexcept;
 
-    //TODO: operator -=, +=
-    timespec    operator +  (const timespec& rvalue) const;
-    timespec    operator -  (const timespec& rvalue) const;
-    bool        operator <  (const timespec& rvalue) const;
-    bool        operator >  (const timespec& rvalue) const;
-    bool        operator <= (const timespec& rvalue) const;
-    bool        operator >= (const timespec& rvalue) const;
-    }; //struct timespec
+timespec    operator + (const timespec& rvalue) const noexcept;
+timespec    operator - (const timespec& rvalue) const noexcept;
+timespec&   operator +=(const timespec& rvalue) noexcept;
+// TODO: timespec&   operator -=(const timespec& rvalue) noexcept;
+bool        operator < (const timespec& rvalue) const noexcept;
+bool        operator > (const timespec& rvalue) const noexcept;
+bool        operator ==(const timespec& rvalue) const noexcept;
+bool        operator <=(const timespec& rvalue) const noexcept;
+bool        operator >=(const timespec& rvalue) const noexcept;
+};
 
 struct timeval:
-        public ::timeval
-    {
-    using ::timeval::tv_sec;
-    using ::timeval::tv_usec;
+    public ::timeval
+{
+using ::timeval::tv_sec;
+using ::timeval::tv_usec;
 
-                timeval() = default;
-    inline      timeval(const ::timeval& origin);
-    inline      timeval(decltype(tv_sec) sec, decltype(tv_usec) usec);
+inline      timeval() noexcept;
+inline      timeval(const ::timeval& origin) noexcept;
+inline      timeval(decltype(tv_sec) sec, decltype(tv_usec) usec) noexcept;
 
-    //TODO: operator -=, +=
-    timeval     operator +  (const timeval& rvalue) const;
-    timeval     operator -  (const timeval& rvalue) const;
-    bool        operator <  (const timeval& rvalue) const;
-    bool        operator >  (const timeval& rvalue) const;
-    bool        operator <= (const timeval& rvalue) const;
-    bool        operator >= (const timeval& rvalue) const;
-    }; // struct timeval
+//TODO: operator -=, +=
+timeval     operator +  (const timeval& rvalue) const noexcept;
+timeval     operator -  (const timeval& rvalue) const noexcept;
+bool        operator <  (const timeval& rvalue) const noexcept;
+bool        operator >  (const timeval& rvalue) const noexcept;
+bool        operator <= (const timeval& rvalue) const noexcept;
+bool        operator >= (const timeval& rvalue) const noexcept;
+}; // struct timeval
 
-timespec    clock_gettime(clockid_t clk_id);
+timespec clock_gettime(const clockid_t clk_id);
 
-void        nanosleep(const timespec& req);
-void        nanosleep(const timespec& req, timespec& rem);
+void nanosleep(const timespec& req);
+void nanosleep(const timespec& req, timespec& rem);
 
-} //namespace unistd
+} // namespace unistd
 
 #include "time.inc"
-
-#endif
 

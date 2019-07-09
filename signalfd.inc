@@ -23,7 +23,7 @@ inline int signalfd(int fd, const sigset_t& mask, int flags)
 
 inline int signalfd(const sigset_t& mask, int flags)
     {
-    return unistd::signalfd( mask, flags );
+    return unistd::signalfd( -1, mask, flags );
     }
 
 } //namespace unistd

@@ -1,5 +1,4 @@
-#ifndef UNISTD_SIGNALFD_HPP
-#define UNISTD_SIGNALFD_HPP
+#pragma once
 
 #include <sys/signalfd.h>
 
@@ -15,6 +14,4 @@ int signalfd(const sigset_t& mask, int flags = 0) __attribute__((warn_unused_res
 } //namespace unistd
 
 #include "signalfd.inc"
-
-#endif
 
