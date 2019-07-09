@@ -31,5 +31,3 @@ std::vector<epoll_event> epoll_wait(int efd, int maxevents, int timeout);
 
 #include "epoll.inc"
 
-#endif
-
