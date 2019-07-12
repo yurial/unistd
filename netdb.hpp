@@ -17,7 +17,7 @@ std::vector<unistd::addrinfo> getaddrinfo(const std::string& host, const std::st
 
 nameinfo getnameinfo(const addrinfo& addr);
 
-int socket(const unistd::addrinfo& addr);
+int socket(const unistd::addrinfo& addr, int flags=0);
 int socket(int domain, int type, int protocol);
 std::tuple<int, int> socketpair(int domain, int type, int protocol);
 

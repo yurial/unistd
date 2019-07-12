@@ -122,9 +122,9 @@ nameinfo getnameinfo(const addrinfo& addr)
     return result;
     }
 
-int socket(const unistd::addrinfo& addr)
+int socket(const unistd::addrinfo& addr, int flags)
     {
-    return unistd::socket(addr.ai_family, addr.ai_socktype, addr.ai_protocol);
+    return unistd::socket(addr.ai_family, addr.ai_socktype | flags, addr.ai_protocol);
     }
 
 int socket(int domain, int type, int protocol)
