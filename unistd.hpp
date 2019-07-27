@@ -27,6 +27,8 @@ void    linkat(int olddirfd, const std::string& oldpath, int newdirfd, const std
 bool    flock(int fd, int operation);
 stat    fstat(int fd);
 void*   mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset);
+void    munmap(void* addr, size_t len);
+void    mprotect(void *addr, size_t len, int prot);
 
 size_t  read(int fd, void* buf, size_t count) __attribute__((warn_unused_result));
 size_t  write(int fd, const void* buf, size_t count) __attribute__((warn_unused_result));

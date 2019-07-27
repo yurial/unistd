@@ -170,10 +170,22 @@ void* mmap(void* addr, size_t len, int prot, int flags, int fd, off_t offset)
     {
     void* const pointer = ::mmap (addr, len, prot, flags, fd, offset);
     if (pointer == MAP_FAILED)
-        {
-        throw std::system_error(errno, std::system_category(), "mmap(...) failed");
-        }
+        throw std::system_error(errno, std::system_category(), "mmap(...)");
     return pointer;
+    }
+
+void munmap(void* addr, size_t len)
+    {
+    const int ret = ::munmap(addr, len);
+    if (-1 == ret)
+        throw std::system_error(errno, std::system_category(), "munmap(...)");
+    }
+
+void mprotect(void *addr, size_t len, int prot)
+    {
+    const int ret = ::mprotect(addr, len, prot);
+    if (-1 == ret)
+        throw std::system_error(errno, std::system_category(), "mprotect(...)");
     }
 
 } // namespace unistd
