@@ -30,6 +30,17 @@ ucontext makecontext(const ucontext& uc_link, char* stack, size_t stack_size, vo
     return uc;
     }
 
+template<class... Args>
+ucontext makecontext(char* stack, size_t stack_size, void (*func)(), Args&&... args)
+    {
+    ucontext uc = unistd::getcontext();
+    uc.uc_link = nullptr;
+    uc.uc_stack.ss_sp = stack;
+    uc.uc_stack.ss_size = stack_size;
+    unistd::makecontext(uc, func, sizeof...(Args), args...);
+    return uc;
+    }
+
 
 } // namespace unistd
 
